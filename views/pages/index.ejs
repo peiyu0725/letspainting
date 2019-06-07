@@ -22,9 +22,12 @@
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <!-- <script src="/assets/canvas.js" charset="utf-8"></script> -->
   <script>
-    liff.init(function (data) {
-      console.log(data.context.userId);    //直接取得 userId
-    });
+    window.onload = function (e) {
+      liff.init(function (data) {
+        console.log(data.context.userId);    //直接取得 userId
+      });
+    };
+    
     var canvas  = document.getElementById('draw');
     var canvastop = canvas.offsetTop
     canvas.width = window.innerWidth;
