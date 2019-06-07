@@ -39,9 +39,9 @@ function draw(e) {
     [lastX, lastY] = [e.offsetX, e.offsetY];  // 位置更新
 
     // 自動變色功能
-    rainbow();
+    // rainbow();
     // 自動粗細變化功能
-    telescopicWidth();
+    // telescopicWidth();
 }
 
 if(!isDrawing) return;
