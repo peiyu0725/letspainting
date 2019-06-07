@@ -73,9 +73,9 @@ const client = new line.Client({
 
 
 bot.on('message', function (event) {
-	console.log(event);
+	// console.log(event);
 	if(event.source.type === 'user') {
-		console.log('user');
+		// console.log('user');
 		client.getProfile(event.source.userId)
 		  .then((profile) => {
 				sendMessage(event, profile);
@@ -85,7 +85,7 @@ bot.on('message', function (event) {
 		  });
 	}
 	else if(event.source.type === 'group') {
-		console.log('group');
+		// console.log('group');
 		client.getGroupMemberProfile(event.source.groupId, event.source.userId)
 			.then((profile) => {
 				sendMessage(event, profile);
@@ -95,7 +95,7 @@ bot.on('message', function (event) {
 			});
 	}
 	else if(event.source.type === 'room') {
-		console.log('room');
+		// console.log('room');
 		client.getGroupMemberProfile(event.source.roomId, event.source.userId)
 			.then((profile) => {
 				sendMessage(event, profile);
@@ -107,10 +107,10 @@ bot.on('message', function (event) {
 });
 
 function sendMessage(event, profile) {
-	console.log(profile);
+	// console.log(profile);
 	if(event.message.text === '嗨' || event.message.text === '你好' || event.message.text === '安安') {
 		event.reply(event.message.text + '！' + profile.displayName).then(function (data) {
-			console.log('success',data);
+			// console.log('success',data);
 		}).catch(function (error) {
 			console.log('Error', error);
 		});
@@ -119,25 +119,25 @@ function sendMessage(event, profile) {
 		event.reply([
 			{
 				"type": "flex",
-				"altText": "this is a flex message",
+				"altText": "維尼小畫布",
 				"contents": message
 			}
 		]).then(function (data) {
-			console.log('succsss',data);
+			// console.log('succsss',data);
 		}).catch(function (error) {
 			console.log('Error', error);
 		});
 	}
 	else if(event.message.text === '哈哈') {
 		event.reply('笑屁XD').then(function (data) {
-			console.log('success',data);
+			// console.log('success',data);
 		}).catch(function (error) {
 			console.log('Error', error);
 		});
 	}
 	else {
 		event.reply(event.message.text).then(function (data) {
-			console.log('success',data);
+			// console.log('success',data);
 		}).catch(function (error) {
 			console.log('Error', error);
 		});
