@@ -19,91 +19,69 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
   <!-- <script src="/assets/canvas.js" charset="utf-8"></script> -->
   <script>
-    const canvas = document.querySelector('#draw');
-    const ctx = canvas.getContext('2d');  // 取得 Canvas 的渲染環境及其繪圖函數
-
+    liff.init(function (data) {
+      console.log(data.context.userId);    //直接取得 userId
+    });
+    var canvas  = document.getElementById('draw');
+    var canvastop = canvas.offsetTop
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Initialize
-    ctx.strokeStyle = '#bada55';  // 筆觸顏色
-    ctx.lineJoin = 'round';  // 兩條線交匯處產生 "圓形" 邊角
-    ctx.lineCap = 'round';  // 筆觸預設為 "圓形"
-    ctx.lineWidth = 1;  // 筆頭寬度
+    var context = canvas.getContext("2d");
 
-    let isDrawing = false;  // 是否允許繪製  (或說是否是 mousedown 下筆狀態)
+    var lastx;
+    var lasty;
 
-    /* 繪製時的起點座標 */
-    let lastX = 0;
-    let lastY = 0;
+    context.strokeStyle = "#000000";
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    context.lineWidth = 5;
 
-    /*========== Events Binding ==========*/
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mouseout', () => isDrawing = false);
-    canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true; // 允許繪製
-        [lastX, lastY] = [e.offsetX, e.offsetY]; // 設定起始點
-    });
-
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchmove', draw);
-
-    /*========== 繪製函數；在 mousemove 的時候使用 ==========*/
-    function draw(e) {
-        if(!isDrawing) return;  // 沒有允許繪製即退出
-
-        /* 繪製路線 Setting */
-        ctx.beginPath();  // 開始路徑 or Reset
-        ctx.moveTo(lastX, lastY);  // 設定起點
-        ctx.lineTo(e.offsetX, e.offsetY);  // 設定終點
-        ctx.stroke();  // 依照設定開始繪製
-
-        [lastX, lastY] = [e.offsetX, e.offsetY];  // 位置更新
-
-        // 自動變色功能
-        // rainbow();
-        // 自動粗細變化功能
-        // telescopicWidth();
+    function clear() {
+      context.fillStyle = "#ffffff";
+      context.rect(0, 0, 300, 300);
+      context.fill();
     }
 
-    // if(!isDrawing) return;
-
-    /*---------- Rainbow 功能 ----------*/
-    let hue = 0; // 色相環度數從 0 開始 (的異世界!? XD)
-
-    function rainbow(){
-        // 透過 context 的 strokeStyle 設定筆畫顏色
-        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-
-        hue++; // 色相環 度數更新
-        if (hue >= 360) {
-            hue = 0;
-        }
+    function dot(x,y) {
+      context.beginPath();
+      context.fillStyle = "#000000";
+      context.arc(x,y,1,0,Math.PI*2,true);
+      context.fill();
+      context.stroke();
+      context.closePath();
     }
 
-    /*---------- 動態筆觸 功能 ----------*/
-    /**
-     * for 筆觸大小。
-     *
-     * true 為 "細到粗"
-     * false 為"粗到細"
-     */
-    let direction = true;
+    function line(fromx,fromy, tox,toy) {
+      context.beginPath();
+      context.moveTo(fromx, fromy);
+      context.lineTo(tox, toy);
+      context.stroke();
+      context.closePath();
+    }
 
-    function telescopicWidth(){
-        /* 如果 >=100 或者 <=1 則筆觸大小反向動作 */
-        if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
-            direction = !direction;
-        }
+    canvas.ontouchstart = function(event){
+      event.preventDefault();
 
-        /* 筆觸粗細實作 */
-        if (direction) {
-            ctx.lineWidth++;
-        } else {
-            ctx.lineWidth--;
-        }
+      lastx = event.touches[0].clientX;
+      lasty = event.touches[0].clientY - canvastop;
+
+      dot(lastx,lasty);
+    }
+
+    canvas.ontouchmove = function(event){
+      event.preventDefault();
+
+      var newx = event.touches[0].clientX;
+      var newy = event.touches[0].clientY - canvastop;
+
+      line(lastx,lasty, newx,newy);
+
+      lastx = newx;
+      lasty = newy;
     }
   </script>
 </body>
