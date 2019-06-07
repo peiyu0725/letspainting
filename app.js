@@ -16,7 +16,7 @@ const app = express();
 const linebotParser = bot.parser();
 
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -26,7 +26,6 @@ app.set('view engine', 'ejs');
 app.get('/', function(req, res){
   res.render('pages/index');
 });
-
 
 app.post('/linewebhook', linebotParser);
 
