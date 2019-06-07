@@ -24,7 +24,6 @@ app.set('view engine', 'ejs');
 
 // modify router use file name
 app.get('/', function(req, res){
-	res.sendFile(path.join( __dirname, 'assets', 'index' ));
   res.render('pages/index');
 });
 
