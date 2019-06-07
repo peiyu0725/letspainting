@@ -15,10 +15,8 @@ const app = express();
 
 const linebotParser = bot.parser();
 
-app.set('port', (process.env.PORT || 5000));
-
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -74,6 +72,7 @@ const client = new line.Client({
 
 
 bot.on('message', function (event) {
+	console.log(event);
 	if(event.source.type === 'user') {
 		console.log('user');
 		client.getProfile(event.source.userId)
