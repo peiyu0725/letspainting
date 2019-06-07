@@ -22,9 +22,11 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'ejs');
-// app.use("/public", express.static(__dirname + '/public'));
+// modify router use file name
+app.get('/', function(req, res){
+  res.render('pages/index');
+});
+
 
 app.post('/linewebhook', linebotParser);
 
@@ -143,14 +145,7 @@ function sendMessage(event, profile) {
 	}
 }
 
-// modify router use file name
-app.get('/', function(req, res){
-  res.render('pages/index');
-});
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.listen(process.env.PORT || 80, function () {
+	console.log('LineBot is running.');
 });
-// app.listen(process.env.PORT || 80, function () {
-// 	console.log('LineBot is running.');
-// });
