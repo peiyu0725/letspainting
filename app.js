@@ -42,8 +42,9 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage : storage });
 app.post('/fileupload', upload.single('file'), function(req, res) {
+	console.log(req.file);
+
 	var data = { 'filename' : res.req.file.filename };
-	console.log(data);
 	// res.json({
 	// 	status : true,
 	// 	image: 'paint-' + new Date().getTime() + '.png',
