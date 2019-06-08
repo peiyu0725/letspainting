@@ -53,7 +53,7 @@ app.post('/fileupload', type, function (req,res) {
 		console.log(req.file);
 		var response = {
 			status : true,
-			image: req.file.originalname
+			image: req.file.filename
 		}
 		res.send(JSON.stringify(response));
 });

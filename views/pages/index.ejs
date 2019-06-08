@@ -285,8 +285,8 @@
                     liff.sendMessages([    //使用者自動發送圖片訊息
                     {
                         type: 'image',
-                        originalContentUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png',
-                        previewImageUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png'
+                        originalContentUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename ,
+                        previewImageUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename
                     }
                     ]).then(function () {    // 發送完關閉視窗
                         liff.closeWindow();
