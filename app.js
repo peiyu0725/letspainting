@@ -58,14 +58,14 @@ app.post('/fileupload', function(req, res) {
 
 	req.on('end', function() {
 		var post = qs.parse(body);
-		// var filename = new Date().getTime() + ;
-		console.log(post.image);
+		var filename = 'paint-' + new Date().getTime() + '.png';
+		console.log(filename);
 		// saveImage(post.image, filename + '.png');
-		// var response = {
-		// 	status : true,
-		// 	image: filename
-		// }
-		// res.send(JSON.stringify(response));
+		var response = {
+			status : true,
+			image: filename
+		}
+		res.send(JSON.stringify(response));
 	});
 });
 
