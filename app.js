@@ -41,8 +41,8 @@ app.post('/fileupload', upload.single('file'), function(req, res) {
       res.send(500);
     } else {
       res.json({
-        message: 'File uploaded successfully',
-        filename: req.file.filename
+				status : true,
+				image: req.file.filename
       });
     }
   });
