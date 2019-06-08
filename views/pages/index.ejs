@@ -261,10 +261,11 @@
         $.ajax({
           url: "/fileupload",
           type: "POST",
-          datatype: "json",
-          data: {
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data: JSON.stringify({
               image: imgData
-          },
+          }),
           success: function (res, status) {    //成功時回傳
             console.log(res);
               //
