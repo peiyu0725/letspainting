@@ -7,79 +7,91 @@
   <title>維尼小畫布</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <style type="text/css">
-  html, body {
-      margin:0;
-      font-family: "Microsoft JhengHei";
-      display: block;
-  }
-  .submit {
-    position: fixed;
-    bottom: 0;
-    font-weight: 700;
-  }
-  .pan-warp {
-    padding: 5px;
-    text-align: center;
-    line-height: 0;
-    background-color: #ccc;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-  }
-  #color-picker-warp {
-    position: fixed !important;
-    background-color: #ffffff;
-    padding: 10px;
-    border: 1px #000000 solid;
-    display: none;
-    top: 42px;
-    left: 0;
-  }
-  #color-box {
-    width: 30px;
-    height: 30px;
-    border: 2px #ffffff solid;
-    background-color: #000000;
-  }
-  #color-submit {
-    margin-top: 10px;
-    font-weight: 700;
-  }
-  .slidecontainer {
-    width: 200px;
-  }
+    html, body {
+        margin:0;
+        font-family: "Microsoft JhengHei";
+        display: block;
+    }
 
-  .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 15px;
-    border-radius: 5px;
-    background: #ffffff;
-    outline: none;
-    margin-top: 8px;
-  }
+    .submit {
+      position: fixed;
+      bottom: 0;
+      font-weight: 700;
+    }
 
-  .slider:hover {
-    opacity: 1;
-  }
+    .pan-warp {
+      padding: 5px;
+      text-align: center;
+      line-height: 0;
+      background-color: #ccc;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
 
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #ffc107;
-    cursor: pointer;
-  }
+    #color-picker-warp {
+      position: fixed !important;
+      background-color: #ffffff;
+      padding: 10px;
+      border: 1px #000000 solid;
+      display: none;
+      top: 42px;
+      left: 0;
+    }
 
-  .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #ffc107;
-    cursor: pointer;
-  }
+    #color-box {
+      width: 30px;
+      height: 30px;
+      border: 2px #ffffff solid;
+      background-color: #000000;
+    }
+
+    #color-submit {
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .slidecontainer {
+      width: 200px;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;
+      background: #ffffff;
+      outline: none;
+      margin-top: 8px;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #ffc107;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #ffc107;
+      cursor: pointer;
+    }
+
+    .modal-footer {
+      padding: 5px;
+      border-top: none;
+      justify-content: center;
+    }
   </style>
   <!-- <link rel="stylesheet" type="text/css" href="/assets/style.css"> -->
 </head>
@@ -90,13 +102,26 @@
     <div class="slidecontainer">
       <input type="range" min="1" max="40" value="3" class="slider" id="myRange">
     </div>
-    <button type="button" id="color-clear" class="btn btn-danger btn-sm">清空</button>
+    <button type="button" id="color-clear" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCenter">清空</button>
     <div id="color-picker-warp">
       <div id="color-picker-container"></div>
       <button type="button" id="color-submit" class="btn btn-info btn-sm btn-block">確 定</button>
     </div>
   </div>
   <canvas id="draw"></canvas>
+  <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h5 class="modal-title" id="modalCenterTitle"></h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="modal-confirm">確定</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <button type="button" class="submit btn btn-warning btn-lg btn-block">送 出</button>
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -123,51 +148,21 @@
       color: "#000000"
     });
     var canvas = document.getElementById('draw');
+    var submit = document.getElementById('submit');
+    var modalCconfirm = document.getElementById('modal-confirm');
+
     var canvastop = canvas.offsetTop;
+    var context = canvas.getContext("2d");
+    var lastx, lasty, pickerColor, isDrawing = true;
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - 100;
-
-    var context = canvas.getContext("2d");
-
-    var lastx, lasty, pickerColor, isDrawing = true;
-    slider.oninput = function() {
-      context.lineWidth = Number(this.value);
-    }
-    colorBox.addEventListener('click', function() {
-      isDrawing = false;
-      colorPickerWarp.style.display = 'block';
-    });
-
-    eraser.addEventListener('click', function() {
-      isDrawing = true;
-      context.strokeStyle = '#ffffff';
-      colorBox.style.background = '#ffffff';
-      colorPickerWarp.style.display = 'none';
-    });
-
-    colorSubmit.addEventListener('click', function() {
-      isDrawing = true;
-      context.strokeStyle = pickerColor;
-      colorBox.style.background = pickerColor;
-      colorPickerWarp.style.display = 'none';
-    });
-
-    colorPicker.on('input:end', onColorEnd);
-
-    function onColorEnd(color, changes) {
-      pickerColor = color.hexString;
-    }
 
     context.lineCap = 'round';
     context.lineJoin = 'round';
     context.lineWidth = 3;
 
-    clear.addEventListener('click', function() {
-      context.fillStyle = "#ffffff";
-      context.rect(0, 0, window.innerWidth, window.innerHeight - 100);
-      context.fill();
-    });
-
+    //畫板
     function dot(x, y) {
       context.beginPath();
       context.fillStyle = "#000000";
@@ -209,6 +204,64 @@
         lasty = newy;
       }
     }
+
+    //顏色選擇器
+    colorBox.addEventListener('click', function() {
+      isDrawing = false;
+      colorPickerWarp.style.display = 'block';
+    });
+
+    colorSubmit.addEventListener('click', function() {
+      isDrawing = true;
+      context.strokeStyle = pickerColor;
+      colorBox.style.background = pickerColor;
+      colorPickerWarp.style.display = 'none';
+    });
+
+    colorPicker.on('input:end', onColorEnd);
+
+    function onColorEnd(color, changes) {
+      pickerColor = color.hexString;
+    }
+
+    //橡皮擦
+    eraser.addEventListener('click', function() {
+      isDrawing = true;
+      context.strokeStyle = '#ffffff';
+      colorBox.style.background = '#ffffff';
+      colorPickerWarp.style.display = 'none';
+    });
+
+    //筆頭粗細
+    slider.oninput = function() {
+      context.lineWidth = Number(this.value);
+    }
+
+    //清除畫板
+    clear.addEventListener('click', function() {
+      document.getElementById('modalCenterTitle').textContent = '確定要清空繪圖板？';
+      document.getElementById('modal-confirm').setAttribute("data-type", 'clear');
+    });
+
+    //送出
+    submit.addEventListener('click', function() {
+      document.getElementById('modalCenterTitle').textContent = '確定要送出？';
+      document.getElementById('modal-confirm').setAttribute("data-type", 'submit');
+    });
+
+    //確認框
+    modalCconfirm.addEventListener('click', function() {
+      if(this.getAttribute("data-type") === 'clear') {
+        context.fillStyle = "#ffffff";
+        context.rect(0, 0, window.innerWidth, window.innerHeight - 100);
+        context.fill();
+      }
+      else if(this.getAttribute("data-type") === 'submit') {
+        var img = canvas.toDataURL('image/png', 1.0);
+        console.log(img);
+      }
+      $('#modalCenter').modal('hide');
+    });
   </script>
 </body>
 </html>
