@@ -15,8 +15,7 @@ const bot = linebot({
 const app = express();
 const linebotParser = bot.parser();
 
-console.log(linebotParser);
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use('/', express.static(__dirname + '/public'));
 
 // views is directory for all template files
@@ -56,7 +55,7 @@ app.post('/fileupload', type, function (req,res) {
 			image: req.file.filename
 		}
 		res.send(JSON.stringify(response));
-});
+	});
   src.on('error', function(err) { res.render('error'); });
 });
 // app.post('/fileupload', multer(multerConfig).single('photo'), function(req, res) {
