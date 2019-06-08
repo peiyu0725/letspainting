@@ -7,26 +7,103 @@
   <title>維尼小畫布</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <style type="text/css">
-    html, body {
-        margin:0;
-        font-family: 'Microsoft JhengHei';
-    }
-    .btn {
-      position: fixed;
-      bottom: 0;
-      font-weight: 700;
-    }
+  html, body {
+      margin:0;
+      font-family: "Microsoft JhengHei";
+      display: block;
+  }
+  .submit {
+    position: fixed;
+    bottom: 0;
+    font-weight: 700;
+  }
+  .pan-warp {
+    padding: 5px;
+    text-align: center;
+    line-height: 0;
+    background-color: #ccc;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  #color-picker-warp {
+    position: fixed !important;
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px #000000 solid;
+    display: none;
+    top: 42px;
+    left: 0;
+  }
+  #color-box {
+    width: 30px;
+    height: 30px;
+    border: 2px #ffffff solid;
+    background-color: #000000;
+  }
+  #color-submit {
+    margin-top: 10px;
+    font-weight: 700;
+  }
+  .slidecontainer {
+    width: 200px;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #ffffff;
+    outline: none;
+    margin-top: 8px;
+  }
+
+  .slider:hover {
+    opacity: 1;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ffc107;
+    cursor: pointer;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ffc107;
+    cursor: pointer;
+  }
   </style>
   <!-- <link rel="stylesheet" type="text/css" href="/assets/style.css"> -->
 </head>
 <body>
+  <div class="pan-warp">
+    <div id="color-box"></div>
+    <button type="button" id="color-eraser" class="btn btn-secondary btn-sm">橡皮擦</button>
+    <div class="slidecontainer">
+      <input type="range" min="1" max="40" value="3" class="slider" id="myRange">
+    </div>
+    <button type="button" id="color-clear" class="btn btn-danger btn-sm">清空</button>
+    <div id="color-picker-warp">
+      <div id="color-picker-container"></div>
+      <button type="button" id="color-submit" class="btn btn-info btn-sm btn-block">確 定</button>
+    </div>
+  </div>
   <canvas id="draw"></canvas>
-  <button type="button" class="btn btn-warning btn-lg btn-block">送出</button>
+  <button type="button" class="submit btn btn-warning btn-lg btn-block">送 出</button>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
+
   <!-- <script src="/assets/canvas.js" charset="utf-8"></script> -->
   <script>
     // window.onload = function (e) {
@@ -35,37 +112,72 @@
     //   });
     // };
     //
-    var canvas  = document.getElementById('draw');
-    var canvastop = canvas.offsetTop
+    var colorPickerWarp = document.getElementById('color-picker-warp');
+    var colorBox = document.getElementById('color-box');
+    var slider = document.getElementById("myRange");
+    var eraser = document.getElementById('color-eraser');
+    var clear = document.getElementById('color-clear');
+    var colorSubmit = document.getElementById('color-submit');
+    var colorPicker = new iro.ColorPicker("#color-picker-container", {
+      width: 200,
+      color: "#000000"
+    });
+    var canvas = document.getElementById('draw');
+    var canvastop = canvas.offsetTop;
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 50;
+    canvas.height = window.innerHeight - 100;
 
     var context = canvas.getContext("2d");
 
-    var lastx;
-    var lasty;
+    var lastx, lasty, pickerColor, isDrawing = true;
+    slider.oninput = function() {
+      context.lineWidth = Number(this.value);
+    }
+    colorBox.addEventListener('click', function() {
+      isDrawing = false;
+      colorPickerWarp.style.display = 'block';
+    });
 
-    context.strokeStyle = "#000000";
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.lineWidth = 5;
+    eraser.addEventListener('click', function() {
+      isDrawing = true;
+      context.strokeStyle = '#ffffff';
+      colorBox.style.background = '#ffffff';
+      colorPickerWarp.style.display = 'none';
+    });
 
-    function clear() {
-      context.fillStyle = "#ffffff";
-      context.rect(0, 0, 300, 300);
-      context.fill();
+    colorSubmit.addEventListener('click', function() {
+      isDrawing = true;
+      context.strokeStyle = pickerColor;
+      colorBox.style.background = pickerColor;
+      colorPickerWarp.style.display = 'none';
+    });
+
+    colorPicker.on('input:end', onColorEnd);
+
+    function onColorEnd(color, changes) {
+      pickerColor = color.hexString;
     }
 
-    function dot(x,y) {
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    context.lineWidth = 3;
+
+    clear.addEventListener('click', function() {
+      context.fillStyle = "#ffffff";
+      context.rect(0, 0, window.innerWidth, window.innerHeight - 100);
+      context.fill();
+    });
+
+    function dot(x, y) {
       context.beginPath();
       context.fillStyle = "#000000";
-      context.arc(x,y,1,0,Math.PI*2,true);
+      context.arc(x, y, 1, 0, Math.PI * 2, true);
       context.fill();
       context.stroke();
       context.closePath();
     }
 
-    function line(fromx,fromy, tox,toy) {
+    function line(fromx, fromy, tox, toy) {
       context.beginPath();
       context.moveTo(fromx, fromy);
       context.lineTo(tox, toy);
@@ -73,25 +185,29 @@
       context.closePath();
     }
 
-    canvas.ontouchstart = function(event){
-      event.preventDefault();
+    canvas.ontouchstart = function(event) {
+      if (isDrawing) {
+        event.preventDefault();
 
-      lastx = event.touches[0].clientX;
-      lasty = event.touches[0].clientY - canvastop;
+        lastx = event.touches[0].clientX;
+        lasty = event.touches[0].clientY - canvastop;
 
-      dot(lastx,lasty);
+        dot(lastx, lasty);
+      }
     }
 
-    canvas.ontouchmove = function(event){
-      event.preventDefault();
+    canvas.ontouchmove = function(event) {
+      if (isDrawing) {
+        event.preventDefault();
 
-      var newx = event.touches[0].clientX;
-      var newy = event.touches[0].clientY - canvastop;
+        var newx = event.touches[0].clientX;
+        var newy = event.touches[0].clientY - canvastop;
 
-      line(lastx,lasty, newx,newy);
+        line(lastx, lasty, newx, newy);
 
-      lastx = newx;
-      lasty = newy;
+        lastx = newx;
+        lasty = newy;
+      }
     }
   </script>
 </body>
