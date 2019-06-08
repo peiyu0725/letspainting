@@ -5,7 +5,7 @@ const engine = require('ejs-locals');
 const path = require('path');
 const bodyParser = require('body-parser');
 const qs = require('qs');
-var fs = require("fs");
+const fs = require("fs");
 const multer = require('multer');
 const bot = linebot({
 	channelId: process.env.CHANNEL_ID,
@@ -31,43 +31,43 @@ app.get('/', function(req, res) {
 
 app.post('/linewebhook', linebotParser);
 
-// var upload = multer({ dest: '/tmp/'});
+var upload = multer({ dest: 'fileupload/'});
 
-app.post('/fileupload', function(req, res) {
-	// console.log(req);
+app.post('/fileupload', upload.single('file'), function(req, res) {
+	console.log("req=>", req);
 	// console.log(res);
+	var file = __dirname + '/' + req.file.image;
+  fs.rename(req.file.path, file, function(err) {
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+			console.log(req.file);
+      res.json({
+				status : true,
+				image: req.file.image
+      });
+    }
+  });
+	// var body = '';
 	//
-	// var file = __dirname + '/' + req.file.image;
-  // fs.rename(req.file.path, file, function(err) {
-  //   if (err) {
-  //     console.log(err);
-  //     res.send(500);
-  //   } else {
-  //     res.json({
-	// 			status : true,
-	// 			image: req.file.image
-  //     });
-  //   }
-  // });
-	var body = '';
-
-	req.on('data', function(data) {
-		body += data;
-		if(body.length > 1e6)
-		req.connection.destroy();
-	});
-
-	req.on('end', function() {
-		var post = qs.parse(body);
-		var filename = new Date().getTime();
-		console.log(post.image);
-		saveImage(post.image, filename + '.png');
-		var response = {
-			status : true,
-			image: filename
-		}
-		res.end(JSON.stringify(response));
-	});
+	// req.on('data', function(data) {
+	// 	body += data;
+	// 	if(body.length > 1e6)
+	// 	req.connection.destroy();
+	// });
+	//
+	// req.on('end', function() {
+	// 	var post = qs.parse(body);
+	// 	var filename = new Date().getTime();
+	// 	console.log(post.image);
+	// 	saveImage(post.image, filename + '.png');
+	// 	var response = {
+	// 		status : true,
+	// 		image: filename
+	// 	}
+	// 	res.send(JSON.stringify(response));
+	// });
 });
 
 const message = {
