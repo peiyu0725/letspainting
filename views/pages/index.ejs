@@ -248,6 +248,14 @@
       document.getElementById('modal-confirm').setAttribute("data-type", 'submit');
     });
 
+    function urltoFile(url, filename, mimeType){
+        mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+        return (fetch(url)
+            .then(function(res){return res.arrayBuffer();})
+            .then(function(buf){return new File([buf], filename, {type:mimeType});})
+        );
+    }
+
     //確認框
     modalCconfirm.addEventListener('click', function() {
       if(this.getAttribute("data-type") === 'clear') {
@@ -257,9 +265,11 @@
       }
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
-        var png = imgData.split(',')[1];
-        var the_file = new Blob([window.atob(png)],  {type: 'image/png', encoding: 'utf-8'});
-        console.log(the_file);
+        //Usage example:
+        urltoFile(imgData, 'print.png')
+        .then(function(file){
+            console.log(file);
+        })
         // $.ajax({
         //   url: "/fileupload",
         //   type: "POST",
