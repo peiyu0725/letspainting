@@ -122,7 +122,7 @@
       </div>
     </div>
   </div>
-  <button type="button" id="imgSubmit" class="btn btn-warning btn-lg btn-block">送 出</button>
+  <button type="button" id="submit" class="submit btn btn-warning btn-lg btn-block">送 出</button>
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -147,7 +147,7 @@
       color: "#000000"
     });
     var canvas = document.getElementById('draw');
-    var imgSubmit = document.getElementById('imgSubmit');
+    var submit = document.getElementById('submit');
     var modalCconfirm = document.getElementById('modal-confirm');
 
     var canvastop = canvas.offsetTop;
@@ -243,7 +243,7 @@
     });
 
     //送出
-    imgSubmit.addEventListener('click', function() {
+    submit.addEventListener('click', function() {
       document.getElementById('modalCenterTitle').textContent = '確定要送出？';
       document.getElementById('modal-confirm').setAttribute("data-type", 'submit');
     });
@@ -257,6 +257,7 @@
       }
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
+        console.log(liff);
         $.ajax({
           url: "/fileupload",
           type: "POST",
