@@ -30,78 +30,66 @@ app.get('/', function(req, res) {
 
 app.post('/linewebhook', linebotParser);
 
-// var upload = multer({ dest: 'uploads/' })
-const multerConfig = {
-	storage: multer.diskStorage({
- //Setup where the user's file will go
- 	destination: function(req, file, next){
-   	next(null, './public/photo-storage');
-   },
-    //Then give the file a unique name
-    filename: function(req, file, next){
-        console.log(file);
-        const ext = file.mimetype.split('/')[1];
-        next(null, file.fieldname + '-' + Date.now() + '.'+ext);
-      }
-    }),
+var upload = multer({ dest: 'upload/'});
+var type = upload.single('file');
 
-    //A means of ensuring only images are uploaded.
-    fileFilter: function(req, file, next){
-      if(!file){
-        next();
-      }
-      const image = file.mimetype.startsWith('image/');
-      if(image){
-        console.log('photo uploaded');
-        next(null, true);
-      } else {
-        console.log("file not supported");
-        //TODO:  A better message response to user on failure.
-        return next();
-      }
-    }
-};
-// var upload = multer({ storage : storage });
-app.post('/fileupload', multer(multerConfig).single('photo'), function(req, res) {
-	console.log(req);
+app.post('/fileupload', type, function (req,res) {
 
-	// var data = { 'filename' : res.req.file.filename };
-	// res.json({
-	// 	status : true,
-	// 	image: 'paint-' + new Date().getTime() + '.png',
-	// });
+  /** When using the "single"
+      data come in "req.file" regardless of the attribute "name". **/
+  var tmp_path = req.file.path;
 
-	// var file = 'uploads' + '/' + req.file.originalname;
-  // fs.rename(req.file.path, file, function(err) {
-  //   if (err) {
-  //     res.send(500);
-  //   } else {
-  //     res.json({
-	// 			status : true,
-	// 			image: 'paint-' + new Date().getTime() + '.png',
-  //     });
-  //   }
-  // });
-	// var body = '';
-	// //
-	// req.on('data', function(data) {
-	// 	body += data;
-	// 	if(body.length > 1e6)
-	// 	req.connection.destroy();
-	// });
-	//
-	// req.on('end', function() {
-	// 	var post = qs.parse(body);
-	// 	var filename = 'paint-' + new Date().getTime() + '.png';
-	// 	// console.log(filename);
-	// 	// saveImage(post.image, filename + '.png');
-	// 	var response = {
-	// 		status : true,
-	// 		image: filename
-	// 	}
-	// 	res.end(JSON.stringify(response));
-	// });
+  /** The original name of the uploaded file
+      stored in the variable "originalname". **/
+  var target_path = 'uploads/' + req.file.originalname;
+
+  /** A better way to copy the uploaded file. **/
+  var src = fs.createReadStream(tmp_path);
+  var dest = fs.createWriteStream(target_path);
+  src.pipe(dest);
+  src.on('end', function() { res.render('complete'); });
+  src.on('error', function(err) { res.render('error'); });
 });
+// app.post('/fileupload', multer(multerConfig).single('photo'), function(req, res) {
+// 	console.log(req);
+//
+// 	// var data = { 'filename' : res.req.file.filename };
+// 	// res.json({
+// 	// 	status : true,
+// 	// 	image: 'paint-' + new Date().getTime() + '.png',
+// 	// });
+//
+// 	// var file = 'uploads' + '/' + req.file.originalname;
+//   // fs.rename(req.file.path, file, function(err) {
+//   //   if (err) {
+//   //     res.send(500);
+//   //   } else {
+//   //     res.json({
+// 	// 			status : true,
+// 	// 			image: 'paint-' + new Date().getTime() + '.png',
+//   //     });
+//   //   }
+//   // });
+// 	// var body = '';
+// 	// //
+// 	// req.on('data', function(data) {
+// 	// 	body += data;
+// 	// 	if(body.length > 1e6)
+// 	// 	req.connection.destroy();
+// 	// });
+// 	//
+// 	// req.on('end', function() {
+// 	// 	var post = qs.parse(body);
+// 	// 	var filename = 'paint-' + new Date().getTime() + '.png';
+// 	// 	// console.log(filename);
+// 	// 	// saveImage(post.image, filename + '.png');
+// 	// 	var response = {
+// 	// 		status : true,
+// 	// 		image: filename
+// 	// 	}
+// 	// 	res.end(JSON.stringify(response));
+// 	// });
+// });
 
 const message = {
 	"type": "bubble",
