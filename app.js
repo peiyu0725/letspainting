@@ -138,7 +138,7 @@ bot.on('message', function (event) {
 
 function sendMessage(event, profile) {
 	// console.log(profile);
-	if(event.message.text === '嗨' || event.message.text === '你好' || event.message.text === '安安') {
+	if(event.message.text.toLowerCase() === 'hello' || event.message.text.toLowerCase() === 'hi' || event.message.text === '嗨' || event.message.text === '妳好' || event.message.text === '你好' || event.message.text === '安安') {
 		event.reply(event.message.text + '！' + profile.displayName).then(function (data) {
 			// console.log('success',data);
 		}).catch(function (error) {
@@ -165,13 +165,27 @@ function sendMessage(event, profile) {
 			console.log('Error', error);
 		});
 	}
-	else {
-		event.reply(event.message.text).then(function (data) {
+	else if(event.message.text === '哈士奇') {
+		event.reply('二哈').then(function (data) {
 			// console.log('success',data);
 		}).catch(function (error) {
 			console.log('Error', error);
 		});
 	}
+	else if(event.message.text === '柴柴') {
+		event.reply('柴柴94可愛').then(function (data) {
+			// console.log('success',data);
+		}).catch(function (error) {
+			console.log('Error', error);
+		});
+	}
+	// else {
+	// 	event.reply(event.message.text).then(function (data) {
+	// 		// console.log('success',data);
+	// 	}).catch(function (error) {
+	// 		console.log('Error', error);
+	// 	});
+	// }
 }
 
 
