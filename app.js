@@ -60,6 +60,7 @@ app.post('/fileupload', function(req, res) {
 	req.on('end', function() {
 		var post = qs.parse(body);
 		var filename = new Date().getTime();
+		console.log(post.image);
 		saveImage(post.image, filename + '.png');
 		var response = {
 			status : true,
