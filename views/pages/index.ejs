@@ -268,15 +268,15 @@
         //Usage example:
         urltoFile(imgData, 'print.png')
         .then(function(file){
+          var formData = new FormData();
+          formData.append('file', file);
           $.ajax({
             url: "/fileupload",
             type: "POST",
-            processData : false,
-            contentType : false,
-            dataType: "json",
-            data: {
-                file: file
-            },
+            // dataType: "json",
+            data: formData,
+            processData: false,
+            contentType: false
             success: function (res, status) {    //成功時回傳
               console.log(res);
                 //

@@ -12,13 +12,12 @@ const bot = linebot({
 	channelSecret: process.env.CHANNEL_SECRET,
 	channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
 });
-
 const app = express();
-
 const linebotParser = bot.parser();
 
-app.use(express.static(__dirname + '/public'));
-// app.use(bodyParser.json());
+console.log(linebotParser);
+app.use(bodyParser.json());
+app.use('/', express.static(__dirname + '/public'));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -32,19 +31,41 @@ app.get('/', function(req, res) {
 app.post('/linewebhook', linebotParser);
 
 // var upload = multer({ dest: 'uploads/' })
-var storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, Date.now() + '-' + file.originalname);
-  }
-});
-var upload = multer({ storage : storage });
-app.post('/fileupload', upload.single('file'), function(req, res) {
-	console.log(req.file);
+const multerConfig = {
+	storage: multer.diskStorage({
+ //Setup where the user's file will go
+ 	destination: function(req, file, next){
+   	next(null, './public/photo-storage');
+   },
+    //Then give the file a unique name
+    filename: function(req, file, next){
+        console.log(file);
+        const ext = file.mimetype.split('/')[1];
+        next(null, file.fieldname + '-' + Date.now() + '.'+ext);
+      }
+    }),
 
-	var data = { 'filename' : res.req.file.filename };
+    //A means of ensuring only images are uploaded.
+    fileFilter: function(req, file, next){
+      if(!file){
+        next();
+      }
+      const image = file.mimetype.startsWith('image/');
+      if(image){
+        console.log('photo uploaded');
+        next(null, true);
+      } else {
+        console.log("file not supported");
+        //TODO:  A better message response to user on failure.
+        return next();
+      }
+    }
+};
+// var upload = multer({ storage : storage });
+app.post('/fileupload', multer(multerConfig).single('photo'), function(req, res) {
+	console.log(req);
+
+	// var data = { 'filename' : res.req.file.filename };
 	// res.json({
 	// 	status : true,
 	// 	image: 'paint-' + new Date().getTime() + '.png',
