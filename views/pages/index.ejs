@@ -265,40 +265,39 @@
       }
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
-          $.ajax({
-            url: "/fileupload",
-            type: "POST",
-            dataType: "json",
-            data: {
-                imgBase64: imgData
-            },
-            success: function (res, status) {    //成功時回傳
-              console.log(res);
-                //
-                // var data = JSON.parse(res);
-                // var filename = data.image;    // 取得圖片名稱
-                //
-                // liff.getProfile().then(function (profile) {    // 取得使用者資料正確時
-                //     liff.sendMessages([    //使用者自動發送圖片訊息
-                //     {
-                //         type: 'image',
-                //         originalContentUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png',
-                //         previewImageUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png'
-                //     }
-                //     ]).then(function () {    // 發送完關閉視窗
-                //         liff.closeWindow();
-                //     }).catch(function (error) {
-                //         window.alert('Error sending message: ' + error.message);
-                //     });
-                // }).catch(function (error) {
-                //     window.alert("Error getting profile: " + error.message);
-                // });
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-              console.log('error=>>', xhr);
-            }
-          });
-        })
+        $.ajax({
+          url: "/fileupload",
+          type: "POST",
+          dataType: "json",
+          data: {
+              imgBase64: imgData
+          },
+          success: function (res, status) {    //成功時回傳
+            console.log(res);
+              //
+              // var data = JSON.parse(res);
+              // var filename = data.image;    // 取得圖片名稱
+              //
+              // liff.getProfile().then(function (profile) {    // 取得使用者資料正確時
+              //     liff.sendMessages([    //使用者自動發送圖片訊息
+              //     {
+              //         type: 'image',
+              //         originalContentUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png',
+              //         previewImageUrl: 'https://paintinglinebot.herokuapp.com/fileupload/' + filename + '.png'
+              //     }
+              //     ]).then(function () {    // 發送完關閉視窗
+              //         liff.closeWindow();
+              //     }).catch(function (error) {
+              //         window.alert('Error sending message: ' + error.message);
+              //     });
+              // }).catch(function (error) {
+              //     window.alert("Error getting profile: " + error.message);
+              // });
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+            console.log('error=>>', xhr);
+          }
+        });
       }
       $('#modalCenter').modal('hide');
     });
