@@ -34,17 +34,22 @@ app.post('/linewebhook', linebotParser);
 var upload = multer({ dest: 'fileupload/'});
 
 app.post('/fileupload', upload.single('file'), function(req, res) {
-	console.log(req);
+	console.log(req.file);
+	res.json({
+		status : true,
+		image: 'paint-' + new Date().getTime() + '.png',
+	});
+
 	// var file = 'uploads' + '/' + req.file.originalname;
   // fs.rename(req.file.path, file, function(err) {
-    if (err) {
-      res.send(500);
-    } else {
-      res.json({
-				status : true,
-				image: 'paint-' + new Date().getTime() + '.png',
-      });
-    }
+  //   if (err) {
+  //     res.send(500);
+  //   } else {
+  //     res.json({
+	// 			status : true,
+	// 			image: 'paint-' + new Date().getTime() + '.png',
+  //     });
+  //   }
   // });
 	// var body = '';
 	// //
