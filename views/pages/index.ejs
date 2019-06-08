@@ -131,12 +131,10 @@
 
   <!-- <script src="/assets/canvas.js" charset="utf-8"></script> -->
   <script>
-    // window.onload = function (e) {
-    //   liff.init(function (data) {
-    //     console.log(data.context.userId);    //直接取得 userId
-    //   });
-    // };
-    //
+    liff.init(function (data) {
+      console.log(data.context.userId);    //直接取得 userId
+    });
+
     var colorPickerWarp = document.getElementById('color-picker-warp');
     var colorBox = document.getElementById('color-box');
     var slider = document.getElementById("myRange");
@@ -257,7 +255,35 @@
         context.fill();
       }
       else if(this.getAttribute("data-type") === 'submit') {
-        var img = canvas.toDataURL('image/png', 1.0);
+        var imgData = canvas.toDataURL('image/png', 1.0);
+        $.ajax({
+          url: "/fileupload",
+          type: "POST",
+          datatype: "json",
+          data: {
+              image: imgData
+          },
+          success: function (res, status) {    //成功時回傳
+              var data = JSON.parse(res);
+              var filename = data.image;    // 取得圖片名稱
+
+              liff.getProfile().then(function (profile) {    // 取得使用者資料正確時
+                  liff.sendMessages([    //使用者自動發送圖片訊息
+                  {
+                      type: 'image',
+                      originalContentUrl: 'https://example.com/uploads/' + filename + '.png',
+                      previewImageUrl: 'https:/example.com/uploads/' + filename + '.png'
+                  }
+                  ]).then(function () {    // 發送完關閉視窗
+                      liff.closeWindow();
+                  }).catch(function (error) {
+                      window.alert('Error sending message: ' + error.message);
+                  });
+              }).catch(function (error) {
+                  window.alert("Error getting profile: " + error.message);
+              });
+          }
+        });
         console.log(img);
       }
       $('#modalCenter').modal('hide');

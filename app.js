@@ -3,8 +3,10 @@ const express = require('express');
 const line = require('@line/bot-sdk');
 const engine = require('ejs-locals');
 const path = require('path');
-const bodyParser = require('body-parser')
-
+const bodyParser = require('body-parser');
+const qs = require('qs');
+var fs = require("fs");
+const multer = require('multer');
 const bot = linebot({
 	channelId: process.env.CHANNEL_ID,
 	channelSecret: process.env.CHANNEL_SECRET,
@@ -23,11 +25,46 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 // modify router use file name
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.render('pages/index');
 });
 
 app.post('/linewebhook', linebotParser);
+
+var upload = multer({ dest: '/tmp/'});
+
+app.post('/fileupload', upload.single('file'), function(req, res) {
+	var file = __dirname + '/' + req.file.filename;
+  fs.rename(req.file.path, file, function(err) {
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      res.json({
+        message: 'File uploaded successfully',
+        filename: req.file.filename
+      });
+    }
+  });
+	// var body = '';
+	//
+	// req.on('data', function(data) {
+	// 	body += data;
+	// 	if(body.length > 1e6)
+	// 	req.connection.destroy();
+	// });
+	//
+	// req.on('end', function() {
+	// 	var post = qs.parse(body);
+	// 	var filename = new Date().getTime();
+	// 	saveImage(post.image, filename + '.png');
+	// 	var response = {
+	// 		status : true,
+	// 		image: filename
+	// 	}
+	// 	res.end(JSON.stringify(response));
+	// });
+});
 
 const message = {
 	"type": "bubble",
