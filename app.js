@@ -52,8 +52,7 @@ app.post('/fileupload', type, function (req,res) {
 			status : true,
 			image: req.file.originalname
 		}
-		res.end(JSON.stringify(response));
-		//
+		res.send(JSON.stringify(response));
 		// res.render('complete');
 });
   src.on('error', function(err) { res.render('error'); });
