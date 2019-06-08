@@ -34,39 +34,39 @@ app.post('/linewebhook', linebotParser);
 var upload = multer({ dest: '/tmp/'});
 
 app.post('/fileupload', upload.single('file'), function(req, res) {
-	console.log(req);
-	console.log(res);
+	// console.log(req);
+	// console.log(res);
+	//
+	// var file = __dirname + '/' + req.file.image;
+  // fs.rename(req.file.path, file, function(err) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.send(500);
+  //   } else {
+  //     res.json({
+	// 			status : true,
+	// 			image: req.file.image
+  //     });
+  //   }
+  // });
+	var body = '';
 
-	var file = __dirname + '/' + req.file.filename;
-  fs.rename(req.file.path, file, function(err) {
-    if (err) {
-      console.log(err);
-      res.send(500);
-    } else {
-      res.json({
-				status : true,
-				image: req.file.filename
-      });
-    }
-  });
-	// var body = '';
-	//
-	// req.on('data', function(data) {
-	// 	body += data;
-	// 	if(body.length > 1e6)
-	// 	req.connection.destroy();
-	// });
-	//
-	// req.on('end', function() {
-	// 	var post = qs.parse(body);
-	// 	var filename = new Date().getTime();
-	// 	saveImage(post.image, filename + '.png');
-	// 	var response = {
-	// 		status : true,
-	// 		image: filename
-	// 	}
-	// 	res.end(JSON.stringify(response));
-	// });
+	req.on('data', function(data) {
+		body += data;
+		if(body.length > 1e6)
+		req.connection.destroy();
+	});
+
+	req.on('end', function() {
+		var post = qs.parse(body);
+		var filename = new Date().getTime();
+		saveImage(post.image, filename + '.png');
+		var response = {
+			status : true,
+			image: filename
+		}
+		res.end(JSON.stringify(response));
+	});
 });
 
 const message = {
