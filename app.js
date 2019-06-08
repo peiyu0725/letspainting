@@ -41,7 +41,7 @@ var upload = multer({
           storage: storage
     });
 var type = upload.single('file');
-
+app.use('/upload',express.static(path.join(__dirname, 'upload')))
 app.post('/fileupload', type, function (req,res) {
   var tmp_path = req.file.path;
   var target_path = 'upload/' + req.file.originalname;
