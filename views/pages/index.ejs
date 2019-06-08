@@ -266,7 +266,7 @@
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
         //Usage example:
-        urltoFile(imgData, 'print.png')
+        urltoFile(imgData, 'print')
         .then(function(file){
           var formData = new FormData();
           formData.append('file', file);
@@ -281,6 +281,7 @@
                 var data = JSON.parse(res);
                 var filename = data.image;    // 取得圖片名稱
                 liff.getProfile().then(function (profile) {    // 取得使用者資料正確時
+                  console.log(profile);
                     liff.sendMessages([    //使用者自動發送圖片訊息
                     {
                         type: 'image',
