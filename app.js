@@ -29,8 +29,18 @@ app.get('/', function(req, res) {
 });
 
 app.post('/linewebhook', linebotParser);
-
-var upload = multer({ dest: 'upload/'});
+var storage = multer.diskStorage(
+    {
+        destination: 'upload/',
+        filename: function ( req, file, cb ) {
+					var fileFormat = (file.originalname).split(".");
+					cb(null, file.fieldname + '-' + Date.now() + "." + fileFormat[fileFormat.length - 1]);
+        }
+    }
+);
+var upload = multer({
+          storage: storage
+    });
 var type = upload.single('file');
 
 app.post('/fileupload', type, function (req,res) {
@@ -40,6 +50,7 @@ app.post('/fileupload', type, function (req,res) {
   var dest = fs.createWriteStream(target_path);
   src.pipe(dest);
   src.on('end', function() {
+		console.log(req.file);
 		var response = {
 			status : true,
 			image: req.file.originalname

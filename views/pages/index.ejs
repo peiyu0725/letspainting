@@ -266,7 +266,7 @@
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
         //Usage example:
-        urltoFile(imgData, 'print')
+        urltoFile(imgData, 'print.png')
         .then(function(file){
           var formData = new FormData();
           formData.append('file', file);
