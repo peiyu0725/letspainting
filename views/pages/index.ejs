@@ -122,14 +122,14 @@
       </div>
     </div>
   </div>
-  <button type="button" class="submit btn btn-warning btn-lg btn-block">送 出</button>
+  <button type="button" class="imgSubmit btn btn-warning btn-lg btn-block">送 出</button>
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
   <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-  
+
   <!-- <script src="/assets/canvas.js" charset="utf-8"></script> -->
   <script>
     liff.init(function (data) {
@@ -147,7 +147,7 @@
       color: "#000000"
     });
     var canvas = document.getElementById('draw');
-    var submit = document.getElementById('submit');
+    var imgSubmit = document.getElementById('imgSubmit');
     var modalCconfirm = document.getElementById('modal-confirm');
 
     var canvastop = canvas.offsetTop;
@@ -243,7 +243,7 @@
     });
 
     //送出
-    submit.addEventListener('click', function() {
+    imgSubmit.addEventListener('click', function() {
       document.getElementById('modalCenterTitle').textContent = '確定要送出？';
       document.getElementById('modal-confirm').setAttribute("data-type", 'submit');
     });
