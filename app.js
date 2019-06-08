@@ -31,10 +31,19 @@ app.get('/', function(req, res) {
 
 app.post('/linewebhook', linebotParser);
 
-var upload = multer({ dest: 'uploads/' })
-
-app.post('/fileupload', function(req, res) {
-	console.log(req.body);
+// var upload = multer({ dest: 'uploads/' })
+var storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, Date.now() + '-' + file.originalname);
+  }
+});
+var upload = multer({ storage : storage });
+app.post('/fileupload', upload.single('file'), function(req, res) {
+	var data = { 'filename' : res.req.file.filename };
+	console.log(data);
 	// res.json({
 	// 	status : true,
 	// 	image: 'paint-' + new Date().getTime() + '.png',
