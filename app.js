@@ -31,9 +31,9 @@ app.get('/', function(req, res) {
 
 app.post('/linewebhook', linebotParser);
 
-var upload = multer({ dest: 'fileupload/'});
+var upload = multer({ dest: 'uploads/' })
 
-app.post('/fileupload', upload.single('file'), function(req, res) {
+app.post('/fileupload', upload.single('image'), function(req, res) {
 	console.log(req.file);
 	res.json({
 		status : true,
