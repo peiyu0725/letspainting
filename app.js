@@ -34,6 +34,9 @@ app.post('/linewebhook', linebotParser);
 var upload = multer({ dest: '/tmp/'});
 
 app.post('/fileupload', upload.single('file'), function(req, res) {
+	console.log(req);
+	console.log(res);
+
 	var file = __dirname + '/' + req.file.filename;
   fs.rename(req.file.path, file, function(err) {
     if (err) {
