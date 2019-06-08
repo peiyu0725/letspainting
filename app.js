@@ -31,10 +31,10 @@ app.get('/', function(req, res) {
 
 app.post('/linewebhook', linebotParser);
 
-var upload = multer({ dest: 'fileupload/'});
+// var upload = multer({ dest: 'fileupload/'});
 
-app.post('/fileupload', upload.single('file'), function(req, res) {
-	console.log(req.file);
+app.post('/fileupload', function(req, res) {
+	// console.log(req.file);
 	// var file = __dirname + '/' + req.file.image;
   // fs.rename(req.file.path, file, function(err) {
   //   if (err) {
@@ -48,25 +48,25 @@ app.post('/fileupload', upload.single('file'), function(req, res) {
 	// 		res.send(JSON.stringify(response));
   //   }
   // });
-	// var body = '';
+	var body = '';
 	//
-	// req.on('data', function(data) {
-	// 	body += data;
-	// 	if(body.length > 1e6)
-	// 	req.connection.destroy();
-	// });
-	//
-	// req.on('end', function() {
-	// 	var post = qs.parse(body);
-	// 	var filename = new Date().getTime();
-	// 	console.log(post.image);
-	// 	saveImage(post.image, filename + '.png');
-	// 	var response = {
-	// 		status : true,
-	// 		image: filename
-	// 	}
-	// 	res.send(JSON.stringify(response));
-	// });
+	req.on('data', function(data) {
+		body += data;
+		if(body.length > 1e6)
+		req.connection.destroy();
+	});
+
+	req.on('end', function() {
+		var post = qs.parse(body);
+		// var filename = new Date().getTime() + ;
+		console.log(post.image);
+		// saveImage(post.image, filename + '.png');
+		// var response = {
+		// 	status : true,
+		// 	image: filename
+		// }
+		// res.send(JSON.stringify(response));
+	});
 });
 
 const message = {
