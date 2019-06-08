@@ -266,7 +266,7 @@
         context.fill();
       }
       else if(this.getAttribute("data-type") === 'submit') {
-        var imgData = canvas.toDataURL('image/jpg', 1.0);
+        var imgData = canvas.toDataURL('image/jpeg', 1.0);
         //Usage example:
         urltoFile(imgData, 'print.jpg')
         .then(function(file){
