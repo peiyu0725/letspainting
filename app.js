@@ -34,39 +34,37 @@ app.post('/linewebhook', linebotParser);
 // var upload = multer({ dest: 'fileupload/'});
 
 app.post('/fileupload', function(req, res) {
-	// console.log(req.file);
-	// var file = __dirname + '/' + req.file.image;
-  // fs.rename(req.file.path, file, function(err) {
-  //   if (err) {
-  //     console.log(err);
-  //     res.send(500);
-  //   } else {
-	// 		var response = {
-	// 			status : true,
-	// 			image: req.file.image
-	// 		}
-	// 		res.send(JSON.stringify(response));
-  //   }
-  // });
-	var body = '';
+	console.log(req.file);
+	var file = 'uploads' + '/' + req.file.originalname;
+  fs.rename(req.file.path, file, function(err) {
+    if (err) {
+      res.send(500);
+    } else {
+      res.json({
+				status : true,
+				image: req.originalname,
+      });
+    }
+  });
+	// var body = '';
+	// //
+	// req.on('data', function(data) {
+	// 	body += data;
+	// 	if(body.length > 1e6)
+	// 	req.connection.destroy();
+	// });
 	//
-	req.on('data', function(data) {
-		body += data;
-		if(body.length > 1e6)
-		req.connection.destroy();
-	});
-
-	req.on('end', function() {
-		var post = qs.parse(body);
-		var filename = 'paint-' + new Date().getTime() + '.png';
-		// console.log(filename);
-		// saveImage(post.image, filename + '.png');
-		var response = {
-			status : true,
-			image: filename
-		}
-		res.end(JSON.stringify(response));
-	});
+	// req.on('end', function() {
+	// 	var post = qs.parse(body);
+	// 	var filename = 'paint-' + new Date().getTime() + '.png';
+	// 	// console.log(filename);
+	// 	// saveImage(post.image, filename + '.png');
+	// 	var response = {
+	// 		status : true,
+	// 		image: filename
+	// 	}
+	// 	res.end(JSON.stringify(response));
+	// });
 });
 
 const message = {
