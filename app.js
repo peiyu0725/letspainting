@@ -35,10 +35,10 @@ var upload = multer({ dest: 'uploads/' })
 
 app.post('/fileupload', upload.single('image'), function(req, res) {
 	console.log(req.file);
-	res.json({
-		status : true,
-		image: 'paint-' + new Date().getTime() + '.png',
-	});
+	// res.json({
+	// 	status : true,
+	// 	image: 'paint-' + new Date().getTime() + '.png',
+	// });
 
 	// var file = 'uploads' + '/' + req.file.originalname;
   // fs.rename(req.file.path, file, function(err) {
