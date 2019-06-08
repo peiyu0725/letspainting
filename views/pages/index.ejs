@@ -160,11 +160,13 @@
     context.lineCap = 'round';
     context.lineJoin = 'round';
     context.lineWidth = 3;
+    context.fillStyle = "#ffffff";
+    context.rect(0, 0, window.innerWidth, window.innerHeight - 100);
+    context.fill();
 
     //畫板
     function dot(x, y) {
       context.beginPath();
-      context.fillStyle = "#000000";
       context.arc(x, y, 1, 0, Math.PI * 2, true);
       context.fill();
       context.stroke();

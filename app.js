@@ -58,46 +58,6 @@ app.post('/fileupload', type, function (req,res) {
 	});
   src.on('error', function(err) { res.render('error'); });
 });
-// app.post('/fileupload', multer(multerConfig).single('photo'), function(req, res) {
-// 	console.log(req);
-//
-// 	// var data = { 'filename' : res.req.file.filename };
-// 	// res.json({
-// 	// 	status : true,
-// 	// 	image: 'paint-' + new Date().getTime() + '.png',
-// 	// });
-//
-// 	// var file = 'uploads' + '/' + req.file.originalname;
-//   // fs.rename(req.file.path, file, function(err) {
-//   //   if (err) {
-//   //     res.send(500);
-//   //   } else {
-//   //     res.json({
-// 	// 			status : true,
-// 	// 			image: 'paint-' + new Date().getTime() + '.png',
-//   //     });
-//   //   }
-//   // });
-// 	// var body = '';
-// 	// //
-// 	// req.on('data', function(data) {
-// 	// 	body += data;
-// 	// 	if(body.length > 1e6)
-// 	// 	req.connection.destroy();
-// 	// });
-// 	//
-// 	// req.on('end', function() {
-// 	// 	var post = qs.parse(body);
-// 	// 	var filename = 'paint-' + new Date().getTime() + '.png';
-// 	// 	// console.log(filename);
-// 	// 	// saveImage(post.image, filename + '.png');
-// 	// 	var response = {
-// 	// 		status : true,
-// 	// 		image: filename
-// 	// 	}
-// 	// 	res.end(JSON.stringify(response));
-// 	// });
-// });
 
 const message = {
 	"type": "bubble",
@@ -185,7 +145,7 @@ function sendMessage(event, profile) {
 			console.log('Error', error);
 		});
 	}
-	else if(event.message.text === '我要畫畫' || event.message.text === '開始畫畫') {
+	else if(event.message.text === '畫畫' || event.message.text === '我要畫畫' || event.message.text === '開始畫畫') {
 		event.reply([
 			{
 				"type": "flex",
