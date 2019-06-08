@@ -265,17 +265,12 @@
       }
       else if(this.getAttribute("data-type") === 'submit') {
         var imgData = canvas.toDataURL('image/png', 1.0);
-        //Usage example:
-        urltoFile(imgData, 'print.png')
-        .then(function(file){
           $.ajax({
             url: "/fileupload",
             type: "POST",
-            processData : false, 
-            contentType : false,
             dataType: "json",
             data: {
-                "image": file
+                imgBase64: imgData
             },
             success: function (res, status) {    //成功時回傳
               console.log(res);
