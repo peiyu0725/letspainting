@@ -34,7 +34,7 @@ app.post('/linewebhook', linebotParser);
 var upload = multer({ dest: 'uploads/' })
 
 app.post('/fileupload', upload.single('image'), function(req, res) {
-	console.log(req.file);
+	console.log(req);
 	// res.json({
 	// 	status : true,
 	// 	image: 'paint-' + new Date().getTime() + '.png',
