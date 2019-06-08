@@ -35,17 +35,17 @@ var upload = multer({ dest: 'fileupload/'});
 
 app.post('/fileupload', upload.single('file'), function(req, res) {
 	console.log(req);
-	var file = 'uploads' + '/' + req.file.originalname;
-  fs.rename(req.file.path, file, function(err) {
+	// var file = 'uploads' + '/' + req.file.originalname;
+  // fs.rename(req.file.path, file, function(err) {
     if (err) {
       res.send(500);
     } else {
       res.json({
 				status : true,
-				image: req.originalname,
+				image: 'paint-' + new Date().getTime() + '.png',
       });
     }
-  });
+  // });
 	// var body = '';
 	// //
 	// req.on('data', function(data) {
