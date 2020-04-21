@@ -158,8 +158,8 @@ function sendMessage(event, profile) {
 			console.log('Error', error);
 		});
 	}
-	else if(event.message.text === '哈哈') {
-		event.reply('笑屁XD').then(function (data) {
+	else if(event.message.text === 'kitty') {
+		event.reply('醜醜').then(function (data) {
 			// console.log('success',data);
 		}).catch(function (error) {
 			console.log('Error', error);
